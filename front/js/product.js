@@ -40,27 +40,16 @@ fetch(productPage)
         productDescription.innerText = `${data.description}`;
             //console.log(productDescription)
         
-        const color = data.colors;    
-            console.log(data.colors)
 
-    })
-
-    .catch(function(err) {
-        console.log("Une erreur est survenue", err);
-    })
-/*  
-
-selectedindex en javascript
-
-
-<div class="item__content__settings">
-    <div class="item__content__settings__color">
-        <label for="color-select">Choisir une couleur :</label>
-            <select name="color-select" id="colors">
-                <option value="">--SVP, choisissez une couleur --</option>
-<!--                <option value="vert">vert</option>
-                    <option value="blanc">blanc</option> -->
-            </select>
-*/
+        const colors = data.colors;    
+            //console.log(color)
+        colors.forEach((element, index) => {
+            //console.log(element)
+            //console.log(index)
+            const productColor = document.getElementById("colors");
+            productColor.innerHTML += `<option value="${element}">${element}</option>`;
+            //console.log(element)
+        })
+})
 
 
