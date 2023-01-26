@@ -1,28 +1,26 @@
-/*
-- écrire variables pour cibler l'élément dans le HTML et pour définir les autres besoins
-- envoyer requête avec fech pour avoir les données déxirées
-- si la réponse est ok, on transforme la réponse en format json
-- les valeurs que l'on a, nous allons les "entrer" dans le DOM
-- si il y a une erreur, la console nous affichera le message d'erreur : "Une erreur est survenue
-+ description de l'erreur"
-*/
-
-//récupération de l'id du produit pour l'écrire dans la page produit 
+// récupération de l'id du produit pour l'écrire dans la page produit 
 const str = window.location.href;
-const url = new URL(str)
+const url = new URL(str);
 const currentId = url.searchParams.get("id");
 
+// création variable pour page api ensemble produits, et une autre pour la page d'un produit 
 const apiProductsUrl = 'http://localhost:3000/api/products/';
 const productPage = apiProductsUrl + currentId;
+
+/*  - écrire variable pour cibler l'élément dans le HTML et pour définir les autres besoins
+    - envoyer requête avec fech pour avoir les données désirées
+    - si la réponse est ok, on transforme la réponse en format json
+    - les valeurs que l'on a, nous allons les "entrer" dans le DOM
+    - si il y a une erreur, la console nous affichera le message d'erreur : "Une erreur est survenue
+    + description de l'erreur"  */
 
 fetch(productPage)
     .then(function(res) {
         if (res.ok) {
             return res.json();
-        }
+    }
 })
     .then(function(data) {
-        //console.log(data);
 
         const productImage = document.querySelector(".item__img");
         productImage.innerHTML = `<img src= ${data.imageUrl} alt= "${data.altTxt}">`; 
@@ -40,43 +38,72 @@ fetch(productPage)
         colors.forEach((element) => {
             let color = document.getElementById("colors");
             color.innerHTML += `<option value="${element}">${element}</option>`;
-            
         })
     })
 
-/*      logique fonctionnelle
-1) en cliquant sur le bouton 
-2) je veux récupérer la couleur choisie, le nombre d'articles, l'id produit
-3) s'assurrer que l'utilisateur a bien choisi une couleur
-4) idem pour un nbre d'article > à 0
-5) si l'utilisateur a un nbre <1 , afficher un message lui disant +1
-6) j'aimerai les stocker */
+/*  logique fonctionnelle
+    1) en cliquant sur le bouton    (on cible l'élément dans le html | on écoute l'évènement)  
+    2) je veux récupérer la couleur choisie, le nombre d'article, l'id produit  (on cible l'élément dans le html | on récupère la valeur)
+    3) s'assurrer que l'utilisateur a bien choisi une couleur
+    4) si l'utilisateur a un nbre <1 , afficher un message lui disant +1    (condition si la quantité est <1 -> message d'alerte)
+    5) j'aimerai les stocker    */
 
 let productAddToCart = document.getElementById("addToCart");
 productAddToCart.addEventListener("click", function() {
     console.log(currentId)
 
+let productAddColor = document.getElementById("colors")
+    console.log(colors.value);
+    if (colors.value = colors.value) {}
+    else {    
+            alert("veuillez choisir une couleur");
+    }
+
 let productAddQuantity = document.getElementById("quantity")
     console.log(quantity.value);
     if (quantity.value < 1 ) {
-    alert("veuillez choisir une quantité")
+        alert("veuillez choisir une quantité")
     }
 
-let product = {id:currentId, quantity:quantity.value}
+let product = {id:currentId, quantity:quantity.value, colors:colors.value}
     console.log(product)
 
-/*  1) recupérer le panier
-2) créer le panier (tableau vide pour éviter d'effacer à chaque fois le produit)
-3) ajouter produit au tableau
-4) panier à mettre dans le local storage    */
+/*  1) recupérer le panier (panier)
+    2) créer le panier (arrayCart : tableau vide pour éviter d'effacer à chaque fois le produit)
+    3) ajouter produit au tableau
+    4) panier à mettre dans le local storage    */
 
-localStorage.setItem("product", JSON.stringify(product));    
+let cart = window.localStorage.getItem("cart");
+    cart = JSON.parse(cart);
+    console.log(cart);
+        
+    if (cart === null) { 
+            console.log("Cart is empty!");
+        cart = [];
+        firstAdd();
+        return;      
+    }
 
-})
-
-/*  1) stockage
-2) récupérer le panier
-3) ajouter les valeurs dans le panier
-4) sauvegarder le panier avec les produits dedans
+let search_id_in_cart = cart.find(element => element.id === product.id && element.colors === product.colors);
+    console.log(search_id_in_cart)
+    
+/* fonction remplacer objet existant
+    retirer objet meme id et color
+    ajoute produit (qté déjà modifié) 
+    faire autre fct 
 */
+    if (!search_id_in_cart) {
+        firstAdd();
 
+    } else if (search_id_in_cart) {
+        search_id_in_cart.quantity = search_id_in_cart.quantity + product.quantity;
+        }
+    
+function firstAdd () {
+    cart.push(product);
+                console.log(cart);
+            let jsonCart = JSON.stringify(cart);
+            let setCart = window.localStorage.setItem("cart", jsonCart);
+                console.log(setCart);
+    }
+})
