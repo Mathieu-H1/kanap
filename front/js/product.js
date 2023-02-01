@@ -50,23 +50,23 @@ fetch(productPage)
 
 let productAddToCart = document.getElementById("addToCart");
 productAddToCart.addEventListener("click", function() {
-    console.log(currentId)
+    //console.log(currentId)
 
 let productAddColor = document.getElementById("colors")
-    console.log(colors.value);
+    //console.log(colors.value);
     if (colors.value = colors.value) {}
     else {    
             alert("veuillez choisir une couleur");
     }
 
 let productAddQuantity = document.getElementById("quantity")
-    console.log(quantity.value);
+    //console.log(quantity.value);
     if (quantity.value < 1 ) {
         alert("veuillez choisir une quantité")
     }
 
 let product = {id:currentId, quantity:quantity.value, colors:colors.value}
-    console.log(product)
+    //console.log(product)
 
 /*  1) recupérer le panier (panier)
     2) créer le panier (arrayCart : tableau vide pour éviter d'effacer à chaque fois le produit)
@@ -75,35 +75,49 @@ let product = {id:currentId, quantity:quantity.value, colors:colors.value}
 
 let cart = window.localStorage.getItem("cart");
     cart = JSON.parse(cart);
-    console.log(cart);
+        console.log(cart);
         
     if (cart === null) { 
             console.log("Cart is empty!");
         cart = [];
         firstAdd();
+            console.log(cart);
         return;      
     }
 
-let search_id_in_cart = cart.find(element => element.id === product.id && element.colors === product.colors);
-    console.log(search_id_in_cart)
+let search_in_cart = cart.find(element => element.id === product.id && element.colors === product.colors);
+    console.log(search_in_cart);
     
 /* fonction remplacer objet existant
     retirer objet meme id et color
     ajoute produit (qté déjà modifié) 
     faire autre fct 
 */
-    if (!search_id_in_cart) {
+    if (!search_in_cart) {
+            console.log(!search_in_cart);
         firstAdd();
+            console.log(cart);
 
-    } else if (search_id_in_cart) {
-        search_id_in_cart.quantity = search_id_in_cart.quantity + product.quantity;
-        }
+    } else if (search_in_cart) {
+            console.log(cart);
+        const indexOfSameProductInCart = cart.indexOf (search_in_cart);
+            console.log(indexOfSameProductInCart);
+        
+            if (indexOfSameProductInCart !==-1) {
+                cart [indexOfSameProductInCart] = {id: currentId, quantity: parseInt(quantity.value) + parseInt(search_in_cart.quantity), colors: colors.value}
+                let jsonCart = JSON.stringify(cart);
+                let setCart = window.localStorage.setItem("cart", jsonCart);
+            }
+            console.log (search_in_cart.quantity);
+            console.log (product.quantity);
+            console.log (cart);
+        
+    } 
     
 function firstAdd () {
     cart.push(product);
-                console.log(cart);
-            let jsonCart = JSON.stringify(cart);
-            let setCart = window.localStorage.setItem("cart", jsonCart);
-                console.log(setCart);
+        //console.log(cart);
+    let jsonCart = JSON.stringify(cart);
+    let setCart = window.localStorage.setItem("cart", jsonCart);
     }
 })
