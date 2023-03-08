@@ -41,7 +41,7 @@ fetch(productPage)
         });
     });
 
-                                                /////////   logique fonctionnelle   /////////
+                                                //*   logique fonctionnelle   //
 
 // en cliquant sur le bouton (on cible l'élément dans le html | on écoute l'évènement)
 
@@ -89,8 +89,7 @@ productAddToCart.addEventListener("click", function () {
 
 // rechercher si objet (même id et couleur) déjà dans le panier
 
-    let search_in_cart = cart.find(
-    (element) => element.id === product.id && element.colors === product.colors);
+    let search_in_cart = cart.find((element) => element.id === product.id && element.colors === product.colors);
         console.log(search_in_cart);
 
 // si objet différent -> fonction firstAdd
