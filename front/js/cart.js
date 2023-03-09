@@ -25,7 +25,7 @@ getCart();
 
 var data;
 cart.forEach((element) => {
-    console.log(element);
+    // console.log(element);
     const apiProductsUrl = "http://localhost:3000/api/products/";   // url avec ttes les données au format json
     const productPage = apiProductsUrl + element.id;
 
@@ -41,7 +41,7 @@ cart.forEach((element) => {
 
             const addInfoProduct = document.getElementById("cart__items");
             addInfoProduct.innerHTML += `
-    <article class="cart__item" data-id="${element.id}" data-color="${element.colors}">
+    <article class="cart__item" data-id="${element.id}" data-color="${element.colors}" data-price="${data.price}">
     <div class="cart__item__img">
         <img src= ${data.imageUrl} alt= "${data.altTxt}">
     </div>
@@ -62,15 +62,14 @@ cart.forEach((element) => {
         </div>
     </div>
 </article>`;
+            // appels des fonctions génériques (*3)
         }
 
         //* prix par produit = prix produit unitaire * qté  ---> ok
 
-        function totalProductPrice() {
-            productPrice = parseInt(data.price) * parseInt(element.quantity);
-            // console.log(productPrice);
-        }
-        totalProductPrice();
+        productPrice = parseInt(data.price) * parseInt(element.quantity);
+        // console.log(productPrice);
+
 
         //* montant total du panier ---> ok
 
@@ -90,71 +89,32 @@ totalCartQuantity();
 //* supprimer un objet dans le panier et le local storage
 
 function deleteProduct() {
-    let buttonDelete = document.getElementsByClassName("deleteItem");
-    console.log(buttonDelete);
-    buttonDelete.addEventListener("click", function () {
-        let searchArticle = buttonDelete.closest("article");    // cible les données du canapé -> dans l'article du dessus (dom)
-        console.log(searchArticle);
-        let searchId = searchArticle.dataset.id;    // on récupère l' id
-        console.log(searchId);
-        let searchColor = searchArticle.dataset.color;  // on récupère la couleur
-        console.log(searchColor);
-        let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);    // filtre si id ou couleur de l'élément est différent
-        console.log(result);
-        searchArticle.remove(); // retire l'élément du dom
-        cartUpdateDelete(); // 
-    })
+    let deleteCanape = document.getElementsByClassName("deleteItem");       // on cible l'élément pur supprimer dans le dom
+    console.log(deleteCanape);
+    let canapes = cart.length;
+    console.log(canapes)
+    for (let deleteCanape of canapes) {
+        deleteCanape.addEventListener("click", function () {           // on écoute l'évènement click
+
+            let searchArticle = deleteCanape.closest("article");       // afin de récupérer les données (canapé que l'on veut supprimer) dans l'article du dessus (dom)
+            console.log(searchArticle);
+            let searchId = searchArticle.dataset.id;                    // on récupère l' id
+            console.log(searchId);
+            let searchColor = searchArticle.dataset.color;              // on récupère la couleur
+            console.log(searchColor);
+            let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
+            console.log(result);
+            searchArticle.remove();
+            cartUpdateDelete(result);                                         // on supprime l'article dans le dom
+        })
+        function cartUpdateDelete() {   // màj du panier dans le local storage
+            cart.push(result);
+            let jsonCart = JSON.stringify(cart);
+            let setCart = window.localStorage.setItem("cart", jsonCart);
+        }
+    }
 }
 deleteProduct();
-
-function cartUpdateDelete() {   // màj du panier dans le local storage
-    cart.push(result);
-    let jsonCart = JSON.stringify(cart);
-    let setCart = window.localStorage.setItem("cart", jsonCart);
-}
-
-//     let deleteCanape = document.getElementsByClassName("deleteItem");       // on cible l'élément pur supprimer dans le dom
-//     console.log(deleteCanape);
-//     let canapes = cart.length;
-//     console.log(canapes)
-//     for (let deleteCanape of canapes) {
-//         deleteCanape.addEventListener("click", function () {           // on écoute l'évènement click
-
-//             let searchArticle = deleteCanape.closest("article");       // afin de récupérer les données (canapé que l'on veut supprimer) dans l'article du dessus (dom)
-//             console.log(searchArticle);
-//             let searchId = searchArticle.dataset.id;                    // on récupère l' id
-//             console.log(searchId);
-//             let searchColor = searchArticle.dataset.color;              // on récupère la couleur
-//             console.log(searchColor);
-//             let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
-//             console.log(result);
-//             searchArticle.remove();
-//             cartUpdateDelete();                                         // on supprime l'article dans le dom
-//         })
-//     }
-//     for (let canape of canapes) {
-//         let quantity = document.getElementsByName("itemQuantity");
-//         quantity.addEventListener("change", (event) => {                  // évènement change
-//             //let edit = ;
-//         })
-//     }
-
-//     function cartUpdateDelete() {
-//         cart.push(result);
-//         console.log(result);
-//         let jsonCart = JSON.stringify(cart);
-//         let setCart = window.localStorage.setItem("cart", jsonCart);
-//     }
-// }
-
-
-    // je récupère l'id, la quantité  (on cible l'élément dans le html | on récupère la valeur)
-    //let getelementId = deleteProduct.closest("article.data-id")
-
-    // modifier une quantité (dom et local storage)
-
-
-
     // cart.forEach((element) => {
     //     const apiProductsUrl = "http://localhost:3000/api/products/";
     //     const productPage = apiProductsUrl + element.id;
@@ -190,3 +150,64 @@ function cartUpdateDelete() {   // màj du panier dans le local storage
     //         </div>
     //     </div>
     // </article>`;
+
+// function deleteProduct() {
+//     let buttonDelete = document.getElementsByClassName("deleteItem");
+//     console.log(buttonDelete);
+//     for (let deleteCanape of canapes) {
+//         buttonDelete.addEventListener("click", function () {
+//             let searchArticle = buttonDelete.closest("article");    // cible les données du canapé -> dans l'article du dessus (dom)
+//             console.log(searchArticle);
+//             let searchId = searchArticle.dataset.id;    // on récupère l' id
+//             console.log(searchId);
+//             let searchColor = searchArticle.dataset.color;  // on récupère la couleur
+//             console.log(searchColor);
+//             let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);    // filtre si id ou couleur de l'élément est différent
+//             console.log(result);
+//             searchArticle.remove(); // retire l'élément du dom
+//             cartUpdateDelete(); //
+//         })
+//     }
+// }
+
+    // deleteProduct();
+
+    // function cartUpdateDelete() {   // màj du panier dans le local storage
+    //     cart.push(result);
+    //     let jsonCart = JSON.stringify(cart);
+    //     let setCart = window.localStorage.setItem("cart", jsonCart);
+    // }
+
+//     let deleteCanape = document.getElementsByClassName("deleteItem");       // on cible l'élément pur supprimer dans le dom
+//     console.log(deleteCanape);
+//     let canapes = cart.length;
+//     console.log(canapes)
+//     for (let deleteCanape of canapes) {
+//         deleteCanape.addEventListener("click", function () {           // on écoute l'évènement click
+
+//             let searchArticle = deleteCanape.closest("article");       // afin de récupérer les données (canapé que l'on veut supprimer) dans l'article du dessus (dom)
+//             console.log(searchArticle);
+//             let searchId = searchArticle.dataset.id;                    // on récupère l' id
+//             console.log(searchId);
+//             let searchColor = searchArticle.dataset.color;              // on récupère la couleur
+//             console.log(searchColor);
+//             let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
+//             console.log(result);
+//             searchArticle.remove();
+//             cartUpdateDelete();                                         // on supprime l'article dans le dom
+//         })
+//     }
+//     for (let canape of canapes) {
+//         let quantity = document.getElementsByName("itemQuantity");
+//         quantity.addEventListener("change", (event) => {                  // évènement change
+//             //let edit = ;
+//         })
+//     }
+
+//     function cartUpdateDelete() {
+//         cart.push(result);
+//         console.log(result);
+//         let jsonCart = JSON.stringify(cart);
+//         let setCart = window.localStorage.setItem("cart", jsonCart);
+//     }
+// }
