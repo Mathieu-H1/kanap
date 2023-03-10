@@ -7,17 +7,17 @@ function getCart() {
     console.log(cart);
 }
 
-//* qté totale des produits dans le panier    ---> ok
-var cartQuantity = 0;
+// //* qté totale des produits dans le panier    ---> ok
+// var cartQuantity = 0;
 
-function totalCartQuantity() {
-    for (let i = 0; i < cart.length; i++) {
-        cartQuantity = parseInt(cartQuantity) + parseInt(cart[i].quantity); // 1*
-        let addtotalCartQuantity = document.getElementById("totalQuantity");
-        addtotalCartQuantity.innerHTML = cartQuantity;
-        // console.log(cartQuantity);
-    }
-}
+// function totalCartQuantity() {
+//     for (let i = 0; i < cart.length; i++) {
+//         cartQuantity = parseInt(cartQuantity) + parseInt(cart[i].quantity); // 1*
+//         let addtotalCartQuantity = document.getElementById("totalQuantity");
+//         addtotalCartQuantity.innerHTML = cartQuantity;
+//         // console.log(cartQuantity);
+//     }
+// }
 var cartPrice = 0;
 
 getCart();
@@ -63,19 +63,19 @@ cart.forEach((element) => {
     </div>
 </article>`;
             // appels des fonctions génériques (*3)
+            totalCartQuantity();
+            // deleteProduct();
+
         }
 
         //* prix par produit = prix produit unitaire * qté  ---> ok
-
-        productPrice = parseInt(data.price) * parseInt(element.quantity);
+        let productPrice = parseInt(data.price) * parseInt(element.quantity);
         // console.log(productPrice);
 
-
         //* montant total du panier ---> ok
-
         function totalCartPrice() {
             cartPrice += productPrice;
-            console.log(cartPrice);
+            // console.log(cartPrice);
             let addTotalCartPrice = document.getElementById("totalPrice");
             addTotalCartPrice.innerHTML = cartPrice;
         }
@@ -84,37 +84,49 @@ cart.forEach((element) => {
     collectData();
 })
 
-totalCartQuantity();
+
+//* qté totale des produits dans le panier  ---> ok
+function totalCartQuantity() {
+    let cartQuantity = 0;
+    let productsQties = document.querySelectorAll(".itemQuantity");
+    // console.log(productQties);
+
+    for (let productQty of productsQties) {
+        cartQuantity += parseInt(productQty.value);
+        console.log(cartQuantity);
+        let addtotalCartQuantity = document.getElementById("totalQuantity");
+        addtotalCartQuantity.innerHTML = cartQuantity;
+    }
+}
 
 //* supprimer un objet dans le panier et le local storage
 
-function deleteProduct() {
-    let deleteCanape = document.getElementsByClassName("deleteItem");       // on cible l'élément pur supprimer dans le dom
-    console.log(deleteCanape);
-    let canapes = cart.length;
-    console.log(canapes)
-    for (let deleteCanape of canapes) {
-        deleteCanape.addEventListener("click", function () {           // on écoute l'évènement click
+// function deleteProduct() {
+//     let deleteCanape = document.getElementsByClassName("deleteItem");       // on cible l'élément pour supprimer dans le dom
+//     // console.log(deleteCanape);
+//     let canapes = cart.length;
+//     // console.log(canapes)
+//     for (let deleteCanape of canapes) {
+//         deleteCanape.addEventListener("click", function () {           // on écoute l'évènement click
 
-            let searchArticle = deleteCanape.closest("article");       // afin de récupérer les données (canapé que l'on veut supprimer) dans l'article du dessus (dom)
-            console.log(searchArticle);
-            let searchId = searchArticle.dataset.id;                    // on récupère l' id
-            console.log(searchId);
-            let searchColor = searchArticle.dataset.color;              // on récupère la couleur
-            console.log(searchColor);
-            let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
-            console.log(result);
-            searchArticle.remove();
-            cartUpdateDelete(result);                                         // on supprime l'article dans le dom
-        })
-        function cartUpdateDelete() {   // màj du panier dans le local storage
-            cart.push(result);
-            let jsonCart = JSON.stringify(cart);
-            let setCart = window.localStorage.setItem("cart", jsonCart);
-        }
-    }
-}
-deleteProduct();
+//             let searchArticle = deleteCanape.closest("article");       // afin de récupérer les données (canapé que l'on veut supprimer) dans l'article du dessus (dom)
+//             console.log(searchArticle);
+//             let searchId = searchArticle.dataset.id;                    // on récupère l' id
+//             console.log(searchId);
+//             let searchColor = searchArticle.dataset.color;              // on récupère la couleur
+//             console.log(searchColor);
+//             let result = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
+//             console.log(result);
+//             searchArticle.remove();
+//             cartUpdateDelete(result);                                         // on supprime l'article dans le dom
+//         })
+//         function cartUpdateDelete() {   // màj du panier dans le local storage
+//             cart.push(result);
+//             let jsonCart = JSON.stringify(cart);
+//             let setCart = window.localStorage.setItem("cart", jsonCart);
+//         }
+//     }
+// }
     // cart.forEach((element) => {
     //     const apiProductsUrl = "http://localhost:3000/api/products/";
     //     const productPage = apiProductsUrl + element.id;
