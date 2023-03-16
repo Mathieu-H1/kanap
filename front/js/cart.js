@@ -8,13 +8,13 @@ function getCart() {
 }
 getCart();
 
-let data;
 cart.forEach((element) => {
     // console.log(element);
     const apiProductsUrl = "http://localhost:3000/api/products/";   // url avec ttes les données au format json
     const productPage = apiProductsUrl + element.id;
 
     async function collectData() {      // fc° récupérer les données donc attendre que fetch s’exécute => await devant fetch
+        let data;
         data = await fetch(productPage) // requete "GET" est de base
         // console.log(data);
 
@@ -50,12 +50,13 @@ cart.forEach((element) => {
             totalCartQuantity();
             totalCartPrice(data.price * element.quantity);
             deleteProduct();
+            changeQty();
         }
     }
     collectData();
 })
 
-//! qté totale des produits dans le panier  ---> ok
+//* qté totale des produits dans le panier  ---> ok
 function totalCartQuantity() {
     let cartQuantity = 0;
     let productsQties = document.querySelectorAll(".itemQuantity");
@@ -69,11 +70,11 @@ function totalCartQuantity() {
     }
 }
 
-//! montant total du panier ---> ok
+//* montant total du panier ---> ok à voir avec Camille variable initialisée avant fonction sinon réinitialise 
 let cartPrice = 0;
 function totalCartPrice(price) {
     cartPrice += price;
-    // console.log(cartPrice);
+    // console.log(price);
     let addTotalCartPrice = document.getElementById("totalPrice");
     addTotalCartPrice.innerHTML = cartPrice;
 }
@@ -109,10 +110,14 @@ function deleteProduct() {
 
 //! changer la quantité d'un objet dans le panier et le local storage ---> NOK
 function changeQty() {
-    let inputMoveQty = document.getElementsByClassName("itemQuantity");
-    console.log(inputMoveQty);
-    inputMoveQty.addEventListener("change", function () {
-console.log(inputMoveQty.value);
-    })
+    let inputMoveQties = document.getElementsByClassName("itemQuantity");
+    // console.log(inputMoveQties);
+
+    for (let inputMoveQty of inputMoveQties)
+        inputMoveQty.addEventListener("change", function () {
+            let newProductQty = inputMoveQty.value;
+            console.log(newProductQty);
+        })
 }
-changeQty();
+//* changer le nombre d'article total
+//* changer le prix total
