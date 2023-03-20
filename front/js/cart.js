@@ -106,7 +106,7 @@ function deleteProduct() {
             cart = JSON.parse(cart);
             let elToKeep = cart.filter(el => el.id !== searchId || el.colors !== searchColor);
             // console.log(elToKeep);
-            
+
             searchArticle.remove();
             totalCartQuantity();
             totalCartPrice();
@@ -136,3 +136,62 @@ function changeQty() {
         })
 }
 
+//* Formulaire
+let contact = {};
+
+function formFirstName() {
+    let inputFirstName = document.getElementById("firstName");
+    let minFirstName = inputFirstName.setAttribute("minlength", "2");
+    let maxFirstName = inputFirstName.setAttribute("maxlength", "20");
+    let chaineFirstName = inputFirstName.value;
+    let masque01 = /[A-Z]/;     //! à voir pour remplacer les deux masques par 1 seul [a-zA-Z]
+    let masque02 = /[a-z]/;
+    if (chaineFirstName == chaineFirstName.match(masque01) || chaineFirstName == chaineFirstName.match(masque02)) {
+        //! envoie value dans l'objet contact
+    } else {
+        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
+    }
+}
+formFirstName();
+
+function formLastName() {
+    let inputLastName = document.getElementById("lastName");
+    let minLastName = inputLastName.setAttribute("minlength", "2");
+    let maxLastName = inputLastName.setAttribute("maxlength", "20");
+    let chaineLastName = inputLastName.value;
+    let masque03 = /[A-Z]/;
+    let masque04 = /[a-z]/;
+    if (chaineLastName == chaineLastName.match(masque03) || chaineLastName == chaineLastName.match(masque04)) {
+        //! envoie value dans l'objet contact
+    } else {
+        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
+    }
+}
+formLastName();
+
+function formAdress() {
+    let inputAdress = document.getElementById("address");
+// str.match('([0-9a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)');
+}
+formAdress();
+
+
+function formCity() {
+    let inputCity = document.getElementById("city");
+    let minCity = inputCity.setAttribute("minlength", "2");
+    let maxCity = inputCity.setAttribute("maxlength", "20");
+    let chaineCity = inputCity.value;
+    let masque03 = /[A-Z]/;
+    let masque04 = /[a-z]/;
+    if (chaineCity == chaineCity.match(masque03) || chaineCity == chaineCity.match(masque04)) {
+        //! envoie value dans l'objet contact
+    } else {
+        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
+    }
+}
+formCity();
+
+function formEmail() {
+    let inputEmail = document.getElementById("email");
+}
+formEmail();
