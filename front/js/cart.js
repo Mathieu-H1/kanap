@@ -56,7 +56,7 @@ getCart();
 
 
 
-//* qté totale des produits dans le panier  ---> ok
+//* qté totale des produits dans le panier ---> ok
 function totalCartQuantity() {
     let cartQuantity = 0;
     let productsQties = document.querySelectorAll(".itemQuantity");
@@ -88,7 +88,7 @@ function totalCartPrice() {
     }
 }
 
-//* supprimer un objet dans le panier et le local storage
+//* supprimer un objet dans le panier et le local storage ---> ok
 function deleteProduct() {
     let canapes = document.getElementsByClassName("deleteItem");
 
@@ -122,76 +122,127 @@ function deleteProduct() {
     }
 }
 
-//! changer la quantité d'un objet dans le local storage ---> NOK
+//* changer la quantité d'un objet dans le local storage ---> ok
 function changeQty() {
-    let inputMoveQties = document.getElementsByClassName("itemQuantity");
-    // console.log(inputMoveQties);
+    let inputChangeQties = document.querySelectorAll(".itemQuantity");
+    // console.log(inputChangeQties);
 
-    for (let inputMoveQty of inputMoveQties)
-        inputMoveQty.addEventListener("change", function () {
-            let newProductQty = inputMoveQty.value;
-            console.log(newProductQty);
+    for (let inputChangeQty of inputChangeQties) {
+        inputChangeQty.addEventListener("change", function () {
+            let newProductQty = inputChangeQty.value;
+            // console.log(newProductQty);
             totalCartQuantity();
             totalCartPrice();
+
+            let searchArticle = inputChangeQty.closest("article");
+            // console.log(searchArticle);
+            let searchId = searchArticle.dataset.id;
+            // console.log(searchId);
+            let searchColor = searchArticle.dataset.color;
+            // console.log(searchColor);
+
+            var cart;
+            cart = window.localStorage.getItem("cart");
+            cart = JSON.parse(cart);
+
+            let elementToChange = cart.find(el => el.id == searchId || el.colors == searchColor);
+            // console.log(elementToChange);
+            elementToChange.quantity = newProductQty;
+            let jsonCart = JSON.stringify(cart);
+            let setCart = window.localStorage.setItem("cart", jsonCart);
         })
+    }
 }
 
 //* Formulaire
-let contact = {};
+function formulaire() {
+    let form = document.querySelector("form");
+    // console.log(form);
+    form.addEventListener("submit", function () {
+        let contact = {
+            prenom: "",
+            nom: "",
+            adresse: "",
+            ville: "",
+            email: "",
+        };
+        //! à voir avec Camille
+        //!                         /^[a-zA-Z].{1}+[-{0,2}||[a-zA-Z].{1,19}/g  
+        //! commence par une lettre (min ou maj) PUIS soit (0 ou 1 ou 2) tiret ou lettre (min ou maj) et ceci 19 caractères
+        
+        //! pour adresse mail affiche une erreur mais pas la mienne pkoi ?
 
-function formFirstName() {
-    let inputFirstName = document.getElementById("firstName");
-    let minFirstName = inputFirstName.setAttribute("minlength", "2");
-    let maxFirstName = inputFirstName.setAttribute("maxlength", "20");
-    let chaineFirstName = inputFirstName.value;
-    let masque01 = /[A-Z]/;     //! à voir pour remplacer les deux masques par 1 seul [a-zA-Z]
-    let masque02 = /[a-z]/;
-    if (chaineFirstName == chaineFirstName.match(masque01) || chaineFirstName == chaineFirstName.match(masque02)) {
-        //! envoie value dans l'objet contact
-    } else {
-        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
-    }
+        //! ne détecte pas d'erreur s'il y a un @ (prénom, nom, ville)  -> location.reload ???
+        function formFirstName() {
+            let inputFirstName = document.getElementById("firstName");
+            let minFirstName = inputFirstName.setAttribute("minlength", "2");
+            let maxFirstName = inputFirstName.setAttribute("maxlength", "20");
+            let chaineFirstName = inputFirstName.value;
+            let masqueFirstName = /[a-zA-Z]/g;
+
+            if (chaineFirstName.match(masqueFirstName)) {
+                contact.prenom = chaineFirstName;
+            } else {
+                alert("Prénom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            }
+        }
+        formFirstName();
+
+        function formLastName() {
+            let inputLastName = document.getElementById("lastName");
+            let minLastName = inputLastName.setAttribute("minlength", "2");
+            let maxLastName = inputLastName.setAttribute("maxlength", "20");
+            let chaineLastName = inputLastName.value;
+            let masqueLastName = /[a-zA-Z]/g;
+
+            if (chaineLastName.match(masqueLastName)) {
+                contact.nom = chaineLastName;
+            } else {
+                alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            }
+        }
+        formLastName();
+
+        function formAddress() {
+            let inputAddress = document.getElementById("address");
+            let chaineAddress = inputAddress.value;
+            let masqueAddress = /[\\D+ || \\d]+\\d+[ ||,||[A-Za-z0-9.-]]+(?:[Rue|Avenue|Chemin|... etcd|Ln|St]+[ ]?)+(?:[A-Za-z0-9.-](.*)]?)/;
+
+            if (chaineAddress.match(masqueAddress)) {
+                contact.adresse = chaineAddress;
+            } else {
+                alert("Adresse non valide");
+            }
+        }
+        formAddress();
+
+        function formCity() {
+            let inputCity = document.getElementById("city");
+            let minCity = inputCity.setAttribute("minlength", "2");
+            let maxCity = inputCity.setAttribute("maxlength", "20");
+            let chaineCity = inputCity.value;
+            let masqueCity = /[a-zA-Z]/g;
+
+            if (chaineCity.match(masqueCity)) {
+                contact.ville = chaineCity;
+            } else {
+                alert("Ville : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            }
+        }
+        formCity();
+
+        function formEmail() {
+            let inputEmail = document.getElementById("email");
+            let chaineEmail = inputEmail.value;
+            let masqueEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+            if (chaineEmail.match(masqueEmail)) {
+                contact.email = chaineEmail;
+            } else {
+                alert("Email non valide");
+            }
+        }
+        formEmail();
+    })
 }
-formFirstName();
-
-function formLastName() {
-    let inputLastName = document.getElementById("lastName");
-    let minLastName = inputLastName.setAttribute("minlength", "2");
-    let maxLastName = inputLastName.setAttribute("maxlength", "20");
-    let chaineLastName = inputLastName.value;
-    let masque03 = /[A-Z]/;
-    let masque04 = /[a-z]/;
-    if (chaineLastName == chaineLastName.match(masque03) || chaineLastName == chaineLastName.match(masque04)) {
-        //! envoie value dans l'objet contact
-    } else {
-        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
-    }
-}
-formLastName();
-
-function formAdress() {
-    let inputAdress = document.getElementById("address");
-// str.match('([0-9a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)');
-}
-formAdress();
-
-
-function formCity() {
-    let inputCity = document.getElementById("city");
-    let minCity = inputCity.setAttribute("minlength", "2");
-    let maxCity = inputCity.setAttribute("maxlength", "20");
-    let chaineCity = inputCity.value;
-    let masque03 = /[A-Z]/;
-    let masque04 = /[a-z]/;
-    if (chaineCity == chaineCity.match(masque03) || chaineCity == chaineCity.match(masque04)) {
-        //! envoie value dans l'objet contact
-    } else {
-        alert("La valeur du champs doit être comprise entre 2 et 20 lettres")
-    }
-}
-formCity();
-
-function formEmail() {
-    let inputEmail = document.getElementById("email");
-}
-formEmail();
+formulaire();
