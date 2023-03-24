@@ -54,8 +54,6 @@ function getCart() {
 }
 getCart();
 
-
-
 //* qté totale des produits dans le panier ---> ok
 function totalCartQuantity() {
     let cartQuantity = 0;
@@ -166,10 +164,11 @@ function formulaire() {
             ville: "",
             email: "",
         };
+
         //! à voir avec Camille
         //!                         /^[a-zA-Z].{1}+[-{0,2}||[a-zA-Z].{1,19}/g  
         //! commence par une lettre (min ou maj) PUIS soit (0 ou 1 ou 2) tiret ou lettre (min ou maj) et ceci 19 caractères
-        
+
         //! pour adresse mail affiche une erreur mais pas la mienne pkoi ?
 
         //! ne détecte pas d'erreur s'il y a un @ (prénom, nom, ville)  -> location.reload ???
@@ -243,6 +242,14 @@ function formulaire() {
             }
         }
         formEmail();
+
     })
+    function createArrayOfProducts() {
+        let arrayOfProducts = [];
+        let searchArticle = document.querySelectorAll("article");
+        let searchId = searchArticle.dataset.id;
+        arrayOfProducts.push(searchId);
+    }
+    createArrayOfProducts()
 }
 formulaire();
