@@ -20,7 +20,7 @@ function getCart() {
                 data = await data.json();    // on attend que la requete soit finie et transforme le json en objet js
                 const addInfoProduct = document.getElementById("cart__items");
 
-                addInfoProduct.innerHTML += `
+                addInfoProduct.innerHTML += `  
         <article class="cart__item" data-id="${element.id}" data-color="${element.colors}" data-price="${data.price}">
         <div class="cart__item__img">
             <img src= ${data.imageUrl} alt= "${data.altTxt}">
@@ -57,7 +57,7 @@ getCart();
 //* qté totale des produits dans le panier ---> ok
 function totalCartQuantity() {
     let cartQuantity = 0;
-    let productsQties = document.querySelectorAll(".itemQuantity");
+    let productsQties = document.querySelectorAll(".itemQuantity"); // renvoit un tableau donc boucle for
     // console.log(productQties);
 
     for (let productQty of productsQties) {
@@ -154,9 +154,10 @@ function changeQty() {
 
 //* Formulaire
 function formulaire() {
+    let arrayOfProducts = [];   // création du tableau ou l'on met les id produit
     let form = document.querySelector("form");
     // console.log(form);
-    form.addEventListener("submit", function () {
+    form.addEventListener("submit", function (e) {
         let contact = {
             prenom: "",
             nom: "",
@@ -165,91 +166,49 @@ function formulaire() {
             email: "",
         };
 
-        //! à voir avec Camille
-        //!                         /^[a-zA-Z].{1}+[-{0,2}||[a-zA-Z].{1,19}/g  
-        //! commence par une lettre (min ou maj) PUIS soit (0 ou 1 ou 2) tiret ou lettre (min ou maj) et ceci 19 caractères
+        //* fonction générique pour toutes les entrées
+        function inputValues(idInput, mask, element) {
+            let input = document.getElementById(idInput);
+            input.setAttribute("minlength", "2");
+            input.setAttribute("maxlength", "20");
+            let chain = input.value;
 
-        //! pour adresse mail affiche une erreur mais pas la mienne pkoi ?
-
-        //! ne détecte pas d'erreur s'il y a un @ (prénom, nom, ville)  -> location.reload ???
-        function formFirstName() {
-            let inputFirstName = document.getElementById("firstName");
-            let minFirstName = inputFirstName.setAttribute("minlength", "2");
-            let maxFirstName = inputFirstName.setAttribute("maxlength", "20");
-            let chaineFirstName = inputFirstName.value;
-            let masqueFirstName = /[a-zA-Z]/g;
-
-            if (chaineFirstName.match(masqueFirstName)) {
-                contact.prenom = chaineFirstName;
+            if (chain.match(mask)) {
+                contact[element] = chain;
+                // console.log(contact);
+                return true;
             } else {
-                alert("Prénom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+                e.preventDefault();
+                return false;
             }
         }
-        formFirstName();
-
-        function formLastName() {
-            let inputLastName = document.getElementById("lastName");
-            let minLastName = inputLastName.setAttribute("minlength", "2");
-            let maxLastName = inputLastName.setAttribute("maxlength", "20");
-            let chaineLastName = inputLastName.value;
-            let masqueLastName = /[a-zA-Z]/g;
-
-            if (chaineLastName.match(masqueLastName)) {
-                contact.nom = chaineLastName;
-            } else {
-                alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
-            }
+        if (!inputValues("firstName", /^[A-Za-z]+$/, "prenom")) {
+            alert("Prénom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            return;
         }
-        formLastName();
-
-        function formAddress() {
-            let inputAddress = document.getElementById("address");
-            let chaineAddress = inputAddress.value;
-            let masqueAddress = /[\\D+ || \\d]+\\d+[ ||,||[A-Za-z0-9.-]]+(?:[Rue|Avenue|Chemin|... etcd|Ln|St]+[ ]?)+(?:[A-Za-z0-9.-](.*)]?)/;
-
-            if (chaineAddress.match(masqueAddress)) {
-                contact.adresse = chaineAddress;
-            } else {
-                alert("Adresse non valide");
-            }
+        if (!inputValues("lastName", /^[A-Za-z]+$/, "nom")) {
+            alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            return;
         }
-        formAddress();
-
-        function formCity() {
-            let inputCity = document.getElementById("city");
-            let minCity = inputCity.setAttribute("minlength", "2");
-            let maxCity = inputCity.setAttribute("maxlength", "20");
-            let chaineCity = inputCity.value;
-            let masqueCity = /[a-zA-Z]/g;
-
-            if (chaineCity.match(masqueCity)) {
-                contact.ville = chaineCity;
-            } else {
-                alert("Ville : la valeur du champs doit être comprise entre 2 et 20 lettres");
-            }
+        if (!inputValues("address", /^([1-9][0-9]*(?:-[1-9][0-9]*)*)[\s,-]+(?:(bis|ter|qua)[\s,-]+)?([\w]+[\-\w]*)[\s,]+([-\w].+)$/, "adresse")) {
+            alert("Adresse non valide");
+            return;
         }
-        formCity();
-
-        function formEmail() {
-            let inputEmail = document.getElementById("email");
-            let chaineEmail = inputEmail.value;
-            let masqueEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-            if (chaineEmail.match(masqueEmail)) {
-                contact.email = chaineEmail;
-            } else {
-                alert("Email non valide");
-            }
+        if (!inputValues("city", /^[A-Za-z]+$/, "ville")) {
+            alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
+            return;
         }
-        formEmail();
+        if (!inputValues("email", /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "email")) {
+            alert("Email non valide");
+            return;
+        }
 
+        let searchArticles = document.querySelectorAll("article");
+        for (let searchArticle of searchArticles) {
+            let searchId = searchArticle.dataset.id;
+            arrayOfProducts.push(searchId);
+            // console.log(arrayOfProducts);
+        }
     })
-    function createArrayOfProducts() {
-        let arrayOfProducts = [];
-        let searchArticle = document.querySelectorAll("article");
-        let searchId = searchArticle.dataset.id;
-        arrayOfProducts.push(searchId);
-    }
-    createArrayOfProducts()
 }
 formulaire();
