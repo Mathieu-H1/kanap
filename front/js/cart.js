@@ -21,27 +21,27 @@ function getCart() {
                 const addInfoProduct = document.getElementById("cart__items");
 
                 addInfoProduct.innerHTML += `  
-        <article class="cart__item" data-id="${element.id}" data-color="${element.colors}" data-price="${data.price}">
-        <div class="cart__item__img">
-            <img src= ${data.imageUrl} alt= "${data.altTxt}">
-        </div>
-        <div class="cart__item__content">
-            <div class="cart__item__content__description">
-                <h2>${data.name}</h2>
+<article class="cart__item" data-id="${element.id}" data-color="${element.colors}" data-price="${data.price}">
+    <div class="cart__item__img">
+        <img src= ${data.imageUrl} alt= "${data.altTxt}">
+    </div>
+    <div class="cart__item__content">
+        <div class="cart__item__content__description">
+            <h2>${data.name}</h2>
                 <p>"${element.colors}"</p>
                 <p>${data.price}€</p>
+        </div>
+        <div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity">
+                <p>Qté : </p>
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
             </div>
-            <div class="cart__item__content__settings">
-                <div class="cart__item__content__settings__quantity">
-                    <p>Qté : </p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
-                </div>
-                <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
-                </div>
+            <div class="cart__item__content__settings__delete">
+                <p class="deleteItem">Supprimer</p>
             </div>
         </div>
-    </article>`;
+    </div>
+</article>`;
                 //* appels des fonctions
                 totalCartQuantity();
                 totalCartPrice();
@@ -154,17 +154,17 @@ function changeQty() {
 
 //* Formulaire
 function formulaire() {
-    let arrayOfProducts = [];   // création du tableau ou l'on met les id produit
     let form = document.querySelector("form");
     // console.log(form);
     form.addEventListener("submit", function (e) {
         let contact = {
-            prenom: "",
-            nom: "",
-            adresse: "",
-            ville: "",
+            firstName: "",
+            lastName: "",
+            address: "",
+            city: "",
             email: "",
         };
+        let arrayOfProducts = [];   // création du tableau ou l'on met les id produit
 
         //* fonction générique pour toutes les entrées
         function inputValues(idInput, mask, element) {
@@ -182,19 +182,19 @@ function formulaire() {
                 return false;
             }
         }
-        if (!inputValues("firstName", /^[A-Za-z]+$/, "prenom")) {
+        if (!inputValues("firstName", /^[A-Za-z]+$/, "firstName")) {
             alert("Prénom : la valeur du champs doit être comprise entre 2 et 20 lettres");
             return;
         }
-        if (!inputValues("lastName", /^[A-Za-z]+$/, "nom")) {
+        if (!inputValues("lastName", /^[A-Za-z]+$/, "lastName")) {
             alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
             return;
         }
-        if (!inputValues("address", /^([1-9][0-9]*(?:-[1-9][0-9]*)*)[\s,-]+(?:(bis|ter|qua)[\s,-]+)?([\w]+[\-\w]*)[\s,]+([-\w].+)$/, "adresse")) {
+        if (!inputValues("address", /^([1-9][0-9]*(?:-[1-9][0-9]*)*)[\s,-]+(?:(bis|ter|qua)[\s,-]+)?([\w]+[\-\w]*)[\s,]+([-\w].+)$/, "address")) {
             alert("Adresse non valide");
             return;
         }
-        if (!inputValues("city", /^[A-Za-z]+$/, "ville")) {
+        if (!inputValues("city", /^[A-Za-z]+$/, "city")) {
             alert("Nom : la valeur du champs doit être comprise entre 2 et 20 lettres");
             return;
         }
@@ -207,8 +207,43 @@ function formulaire() {
         for (let searchArticle of searchArticles) {
             let searchId = searchArticle.dataset.id;
             arrayOfProducts.push(searchId);
-            // console.log(arrayOfProducts);
+            
+            // var cart;
+            // cart = window.localStorage.getItem("cart");
+            // cart = JSON.parse(cart);
+            // const arrayOfProducts = cart.map(item => item.id);
+            console.log(arrayOfProducts);
+
+            //* fc° récupérer l'identifiant de la commande   
+            // requete json contenant (contact et arrayOfProducts) envoyée au serveur
+            const userForm = {
+                contact,
+                products: arrayOfProducts,
+            }
+            console.log(userForm);
+
+            async function collectOrderId() {
+                e.preventDefault();
+                let response = await fetch("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    body: JSON.stringify(userForm),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                let result = await response.json();
+                console.log(result);
+            }
+            collectOrderId();
         }
     })
 }
 formulaire();
+
+// let response = await fetch('/article/fetch/post/user', {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json;charset=utf-8'
+//   },
+//   body: JSON.stringify(user)
+// });
