@@ -4,6 +4,10 @@ function getCart() {
     cart = window.localStorage.getItem("cart");
     cart = JSON.parse(cart);
     console.log(cart);
+    if (cart == null) {
+        alert("Votre panier est vide");
+    }
+
     cart.forEach((element) => {
         // console.log(element);
         const apiProductsUrl = "http://localhost:3000/api/products/";   // url avec ttes les données au format json
@@ -157,6 +161,8 @@ function formulaire() {
     let form = document.querySelector("form");
     // console.log(form);
     form.addEventListener("submit", function (e) {
+
+// création de l'objet contact et du tableau ou l'on met les id produit        
         let contact = {
             firstName: "",
             lastName: "",
@@ -164,9 +170,9 @@ function formulaire() {
             city: "",
             email: "",
         };
-        let arrayOfProducts = [];   // création du tableau ou l'on met les id produit
+        let arrayOfProducts = [];
 
-        //* fonction générique pour toutes les entrées
+//* fonction générique pour toutes les entrées
         function inputValues(idInput, mask, element) {
             let input = document.getElementById(idInput);
             input.setAttribute("minlength", "2");
@@ -207,15 +213,10 @@ function formulaire() {
         for (let searchArticle of searchArticles) {
             let searchId = searchArticle.dataset.id;
             arrayOfProducts.push(searchId);
-            
-            // var cart;
-            // cart = window.localStorage.getItem("cart");
-            // cart = JSON.parse(cart);
-            // const arrayOfProducts = cart.map(item => item.id);
             console.log(arrayOfProducts);
 
-            //* fc° récupérer l'identifiant de la commande   
-            // requete json contenant (contact et arrayOfProducts) envoyée au serveur
+//* fc° récupérer l'identifiant de la commande   
+// requete json contenant (contact et arrayOfProducts) envoyée au serveur
             const userForm = {
                 contact,
                 products: arrayOfProducts,
@@ -223,16 +224,20 @@ function formulaire() {
             console.log(userForm);
 
             async function collectOrderId() {
-                e.preventDefault();
-                let response = await fetch("http://localhost:3000/api/products/order", {
+                e.preventDefault(); // éviter que la page se recharge
+                const response = await fetch("http://localhost:3000/api/products/order", {
                     method: "POST",
                     body: JSON.stringify(userForm),
                     headers: {
                         "Content-Type": "application/json",
                     },
                 });
-                let result = await response.json();
+                const result = await response.json();
                 console.log(result);
+                const orderId = result.orderId;
+                console.log(orderId);
+
+                window.location.assign("/front/html/confirmation.html" + "?id=" + orderId); // adresse html + id commande
             }
             collectOrderId();
         }
@@ -240,10 +245,3 @@ function formulaire() {
 }
 formulaire();
 
-// let response = await fetch('/article/fetch/post/user', {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json;charset=utf-8'
-//   },
-//   body: JSON.stringify(user)
-// });
