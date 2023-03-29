@@ -28,6 +28,9 @@ fetch(productPage)
         const productName = document.getElementById("title");
         productName.innerText = `${data.name}`;
 
+        const name = document.querySelector("title");
+        name.innerText = `${data.name}`;
+
         const productPrice = document.getElementById("price");
         productPrice.innerHTML = `${data.price}`;
 
