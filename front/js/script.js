@@ -6,21 +6,20 @@
 - si il y a une erreur, la console nous affichera le message d'erreur :"Une erreur est survenue"
 */
 
-//création variable pour cibler l'id dans index.html + une variable canapes
-let items = document.getElementById("items")
-let canapes = ""
+function getCanapesData() {
+    let items = document.getElementById("items")    //création variable pour cibler l'id dans index.html + une variable canapes
+    let canapes = "";
 
-//envoi requête afin d'avoir les données produit + les inclure das html
-fetch("http://localhost:3000/api/products")
-    .then(function(res) {
-        if (res.ok) {
-            return res.json();
-        }
-})
-    .then(function(value) {
-        console.log(value);
-        for(let canape of value) {
-            items.innerHTML += `
+    fetch("http://localhost:3000/api/products") //envoi requête afin d'avoir les données produit + les inclure das html
+        .then(function (res) {
+            if (res.ok) {
+                return res.json();
+            }
+        })
+        .then(function (value) {
+            console.log(value);
+            for (let canape of value) {
+                items.innerHTML += `
                 <a href="./product.html?id=${canape._id}">
                     <article>
                         <img src= "${canape.imageUrl}" alt="${canape.altTxt}">
@@ -28,9 +27,11 @@ fetch("http://localhost:3000/api/products")
                         <p class="productDescription">${canape.description}</p>
                     </article>
                 </a>            `
-        }        
-})
-    .catch(function(err) {
-        console.log("Une erreur est survenue", err);
+            }
         })
+        .catch(function (err) {
+            console.log("Une erreur est survenue", err);
+        })
+}
+getCanapesData();
 
