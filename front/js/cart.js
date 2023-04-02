@@ -68,7 +68,7 @@ function totalCartQuantity() {
         cartQuantity += parseInt(productQty.value);
         // console.log(cartQuantity);
         let addtotalCartQuantity = document.getElementById("totalQuantity");
-        addtotalCartQuantity.innerHTML = cartQuantity;
+        addtotalCartQuantity.innerText = cartQuantity;
     }
 }
 
@@ -86,7 +86,7 @@ function totalCartPrice() {
         cartPrice += parseInt(canapPrice) * parseInt(canapQty);
         // console.log(cartPrice);
         let addTotalCartPrice = document.getElementById("totalPrice");
-        addTotalCartPrice.innerHTML = cartPrice;
+        addTotalCartPrice.innerText = cartPrice;
     }
 }
 
@@ -162,7 +162,7 @@ function formulaire() {
     // console.log(form);
     form.addEventListener("submit", function (e) {
 
-// création de l'objet contact et du tableau ou l'on met les id produit        
+        // création de l'objet contact et du tableau ou l'on met les id produit        
         let contact = {
             firstName: "",
             lastName: "",
@@ -172,7 +172,7 @@ function formulaire() {
         };
         let arrayOfProducts = [];
 
-//* fonction générique pour toutes les entrées
+        //* fonction générique pour toutes les entrées
         function inputValues(idInput, mask, element) {
             let input = document.getElementById(idInput);
             input.setAttribute("minlength", "2");
@@ -215,8 +215,8 @@ function formulaire() {
             arrayOfProducts.push(searchId);
             console.log(arrayOfProducts);
 
-//* fc° récupérer l'identifiant de la commande   
-// requete json contenant (contact et arrayOfProducts) envoyée au serveur
+            //* fc° récupérer l'identifiant de la commande   
+            // requete json contenant (contact et arrayOfProducts) envoyée au serveur
             const userForm = {
                 contact,
                 products: arrayOfProducts,
@@ -244,4 +244,3 @@ function formulaire() {
     })
 }
 formulaire();
-
