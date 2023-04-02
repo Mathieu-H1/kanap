@@ -1,47 +1,52 @@
 // récupération de l'id du produit pour l'écrire dans la page produit
-function displayData() {
+function getId() {
     const str = window.location.href;
     const url = new URL(str);
     const currentId = url.searchParams.get("id");
-
-    // création variable pour page api ensemble produits, et une autre pour la page d'un produit
-    const apiProductsUrl = "http://localhost:3000/api/products/";
-    const productPage = apiProductsUrl + currentId;
-
-    // envoyer requête avec fech pour avoir les données désirées
-    // si la réponse est ok, on transforme la réponse en format json
-    fetch(productPage)
-        .then(function (res) {
-            if (res.ok) {
-                return res.json();
-            }
-        })
-
-        // les valeurs que l'on a, nous allons les "entrer" dans le DOM
-        .then(function (data) {
-            const productImage = document.querySelector(".item__img");
-            productImage.innerHTML = `<img src= ${data.imageUrl} alt= "${data.altTxt}">`;
-
-            const productName = document.getElementById("title");
-            productName.innerText = `${data.name}`;
-
-            const name = document.querySelector("title");
-            name.innerText = `${data.name}`;
-
-            const productPrice = document.getElementById("price");
-            productPrice.innerText = `${data.price}`;
-
-            const productDescription = document.getElementById("description");
-            productDescription.innerText = `${data.description}`;
-
-            let colors = data.colors;
-            colors.forEach((element) => {
-                let color = document.getElementById("colors");
-                color.innerHTML += `<option value="${element}">${element}</option>`;
-            });
-        });
+    return currentId;
 }
-displayData();
+console.log(getId());
+
+// création variable pour page api ensemble produits, et une autre pour la page d'un produit
+function productData() {
+    const apiProductsUrl = "http://localhost:3000/api/products/";
+    const productPage = apiProductsUrl + getId();
+    return productPage;
+}
+console.log(productData());
+
+// envoyer requête avec fech pour avoir les données désirées
+// si la réponse est ok, on transforme la réponse en format json
+fetch(productData())
+    .then(function (res) {
+        if (res.ok) {
+            return res.json();
+        }
+    })
+
+    // les valeurs que l'on a, nous allons les "entrer" dans le DOM
+    .then(function (data) {
+        const productImage = document.querySelector(".item__img");
+        productImage.innerHTML = `<img src= ${data.imageUrl} alt= "${data.altTxt}">`;
+
+        const productName = document.getElementById("title");
+        productName.innerText = `${data.name}`;
+
+        const name = document.querySelector("title");
+        name.innerText = `${data.name}`;
+
+        const productPrice = document.getElementById("price");
+        productPrice.innerText = `${data.price}`;
+
+        const productDescription = document.getElementById("description");
+        productDescription.innerText = `${data.description}`;
+
+        let colors = data.colors;
+        colors.forEach((element) => {
+            let color = document.getElementById("colors");
+            color.innerHTML += `<option value="${element}">${element}</option>`;
+        });
+    });
 
 //*   logique fonctionnelle   //
 
@@ -67,7 +72,7 @@ function addToCart() {
         }
 
         let product = {
-            id: currentId,
+            id: getId(),
             quantity: quantity.value,
             colors: colors.value,
         };
@@ -106,7 +111,7 @@ function addToCart() {
 
             if (indexOfSameProductInCart !== -1) {
                 cart[indexOfSameProductInCart] = {
-                    id: currentId,
+                    id: getId(),
                     quantity: parseInt(quantity.value) + parseInt(search_in_cart.quantity),
                     colors: colors.value,
                 };
