@@ -17,6 +17,7 @@ console.log(productData());
 
 // envoyer requête avec fech pour avoir les données désirées
 // si la réponse est ok, on transforme la réponse en format json
+function getData() {
 fetch(productData())
     .then(function (res) {
         if (res.ok) {
@@ -47,6 +48,8 @@ fetch(productData())
             color.innerHTML += `<option value="${element}">${element}</option>`;
         });
     });
+}
+getData();
 
 //*   logique fonctionnelle   //
 
