@@ -34,4 +34,3 @@ function getCanapesData() {
         })
 }
 getCanapesData();
-

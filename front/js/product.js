@@ -18,36 +18,36 @@ console.log(productData());
 // envoyer requête avec fech pour avoir les données désirées
 // si la réponse est ok, on transforme la réponse en format json
 function getData() {
-fetch(productData())
-    .then(function (res) {
-        if (res.ok) {
-            return res.json();
-        }
-    })
+    fetch(productData())
+        .then(function (res) {
+            if (res.ok) {
+                return res.json();
+            }
+        })
 
-    // les valeurs que l'on a, nous allons les "entrer" dans le DOM
-    .then(function (data) {
-        const productImage = document.querySelector(".item__img");
-        productImage.innerHTML = `<img src= ${data.imageUrl} alt= "${data.altTxt}">`;
+        // les valeurs que l'on a, nous allons les "entrer" dans le DOM
+        .then(function (data) {
+            const productImage = document.querySelector(".item__img");
+            productImage.innerHTML = `<img src= ${data.imageUrl} alt= "${data.altTxt}">`;
 
-        const productName = document.getElementById("title");
-        productName.innerText = `${data.name}`;
+            const productName = document.getElementById("title");
+            productName.innerText = `${data.name}`;
 
-        const name = document.querySelector("title");
-        name.innerText = `${data.name}`;
+            const name = document.querySelector("title");
+            name.innerText = `${data.name}`;
 
-        const productPrice = document.getElementById("price");
-        productPrice.innerText = `${data.price}`;
+            const productPrice = document.getElementById("price");
+            productPrice.innerText = `${data.price}`;
 
-        const productDescription = document.getElementById("description");
-        productDescription.innerText = `${data.description}`;
+            const productDescription = document.getElementById("description");
+            productDescription.innerText = `${data.description}`;
 
-        let colors = data.colors;
-        colors.forEach((element) => {
-            let color = document.getElementById("colors");
-            color.innerHTML += `<option value="${element}">${element}</option>`;
+            let colors = data.colors;
+            colors.forEach((element) => {
+                let color = document.getElementById("colors");
+                color.innerHTML += `<option value="${element}">${element}</option>`;
+            });
         });
-    });
 }
 getData();
 
